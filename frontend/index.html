@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ad Display</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="doc-section">
+      <h2>About the Ad Server</h2>
+      <p>
+        This page connects to a simple <strong>Ad Server API</strong> that
+        returns ad data in JSON format from a predefined dataset that was generated using the help of an LLM (DeepSeek). It was provided the fields, and then requested to generate 70 ads of a variety of categories. Then, it was requested to generate 30 additional ads of sensitive categories.
+<a href="/data/ads.json" download>You can download the JSON here.</a>
+      </p>
+
+      <h3>Base URL</h3>
+      <p><code>GET /getad</code></p>
+
+      <h3>Parameters</h3>
+
+      <p>All parameters are not case-sensitive. Ads are scored based on matches with requested keywords, locations, and categories. Excluded ads are never returned. If multiple ads have the same score, one is randomly selected.</p>
+      <ul>
+        <li>
+          <code>keywords</code> (optional, comma-separated) – Filters ads by
+          matching keywords
+        </li>
+        <li>
+          <code>city</code>, <code>state</code>, <code>country</code> (optional)
+          – Filters by location
+        </li>
+        <li>
+          <code>categories</code> (optional, comma-separated) – Filters by ad
+          category
+        </li>
+        <li>
+          <code>excludeKeywords</code> (optional, comma-separated) – Filters ads
+          by excluding keywords
+        </li>
+        <li>
+          <code>excludeCity</code>, <code>excludeState</code>,
+          <code>excludeCountry</code> (optional) – Filters by location
+        </li>
+        <li>
+          <code>excludeCategories</code> (optional, comma-separated) – Filters
+          by excluding ad category
+        </li>
+      </ul>
+
+      <h3>Example Requests</h3>
+      <pre><code>// Get a random ad
+fetch("http://localhost:3232/getad")
+  .then(res => res.json())
+  .then(console.log);
+
+// Get ads related to electric bikes in San Francisco
+fetch("http://localhost:3232/getad?keywords=bikes,electric&city=San%20Francisco")
+  .then(res => res.json())
+  .then(console.log);
+</code></pre>
+
+      <h3>Response Format</h3>
+      <pre><code>{
+    "id": 1,
+    "title": "Bay Area Electric Bikes",
+    "description": "Ride through San Francisco in style with our eco-friendly electric bikes. Free delivery in SF!",
+    "keywords": ["bikes", "electric", "transportation", "eco-friendly", "San Francisco", "Bay Area"],
+    "url": "https://example.com/e-bikes",
+    "city": "San Francisco",
+    "state": "California",
+    "country": "USA",
+    "category": ["Shopping", "Sports & Recreation", "Autos & Vehicles"]
+  }</code></pre>
+    </div>
+
+<h2>Try the API</h2>
+<form id="ad-form">
+  <label>
+    Keywords:
+    <input type="text" id="keywords" placeholder="e.g. coffee,cafe" />
+  </label>
+  <label>
+    Locations:
+    <input type="text" id="locations" placeholder="e.g. Seattle,WA,USA" />
+  </label>
+  <label>
+    Categories:
+    <input type="text" id="categories" placeholder="e.g. Food,Beverage" />
+  </label>
+  <label>
+    Exclude Keywords:
+    <input type="text" id="exclude-keywords" placeholder="e.g. coffee,cafe" />
+  </label>
+  <label>
+    Exclude Locations:
+    <input type="text" id="exclude-locations" placeholder="e.g. Seattle,WA,USA" />
+  </label>
+  <label>
+    Exclude Categories:
+    <input type="text" id="exclude-categories" placeholder="e.g. coffee,cafe" />
+  </label>
+  <button type="submit">Get Ad</button>
+</form>
+<div id="ad-container">Loading ad...</div>
+<script type="module">
+  import { displayAd } from "./ad-display.js";
+
+  const form = document.getElementById("ad-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const keywords = document
+      .getElementById("keywords")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const locations = document
+      .getElementById("locations")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const categories = document
+      .getElementById("categories")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const excludeKeywords = document
+      .getElementById("exclude-keywords")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const excludeLocations = document
+      .getElementById("exclude-locations")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const excludeCategories = document
+      .getElementById("exclude-categories")
+      .value.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    displayAd(keywords, locations, categories, excludeKeywords, excludeLocations, excludeCategories);
+  });
+</script>
+
+</script>
+  </body>
+</html>
