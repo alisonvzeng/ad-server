@@ -49,12 +49,12 @@
 
       <h3>Example Requests</h3>
       <pre><code>// Get a random ad
-fetch("http://localhost:3232/getad")
+fetch("http://cs0320-ci.cs.brown.edu:3233/getad")
   .then(res => res.json())
   .then(console.log);
 
 // Get ads related to electric bikes in San Francisco
-fetch("http://localhost:3232/getad?keywords=bikes,electric&city=San%20Francisco")
+fetch("http://cs0320-ci.cs.brown.edu:3233/getad?keywords=bikes,electric&city=San%20Francisco")
   .then(res => res.json())
   .then(console.log);
 </code></pre>
