@@ -1,5 +1,5 @@
 import { Ad } from "../types/Ad";
-import adsJson from "../data/ads.json";
+import adsJson from "../../public/data/ads.json";
 
 export class AdDatasource {
   private ads: Ad[];
